@@ -18,8 +18,9 @@
  *  1 : X/Y line scan on a 8x8 panel
  *  2 : 4 quadrants RGB+white
  *  3 : r/g/b/w blink cycle
+ *  4 : running dot
  */
-#define EXAMPLE_TEST ((uint8_t)2)
+#define EXAMPLE_TEST ((uint8_t)1)
 
 /*
  * Peripheral initialisation functions
@@ -75,10 +76,10 @@ uint8_t xy_to_idx( uint8_t row, uint8_t col)
 {
     if (row % 2 == 0) {
         // Even rows: left to right
-        return row * 8 + col;
+        return row * MAX_ROW + col;
     } else {
         // Odd rows: right to left
-        return row * 8 + (7 - col);
+        return row * MAX_ROW + (MAX_COL - 1 - col);
     }
 }
 
@@ -86,6 +87,7 @@ uint8_t xy_to_idx( uint8_t row, uint8_t col)
 void main()
 {
 	uint8_t i = 0;
+	uint8_t j = 0;
 	uint8_t dec = 0;
 	uint8_t row = 0;
 	uint8_t col = 0;
@@ -97,12 +99,13 @@ void main()
 	 *-------------------------------------------------*/
 	RGB_typedef *led_panel = malloc(NB_LED * sizeof(RGB_typedef));
 
-	for( i = 0 ; i< NB_LED; i++)
+	i = 0;
+	do
 	{	
 		led_panel[i].r = 0;
 		led_panel[i].g = 0;
 		led_panel[i].b = 0;
-	}
+	} while (i++ != NB_LED);
 
 	/*-------------------------------------------------
 	 * Initialise peripheral
@@ -126,31 +129,31 @@ void main()
 		 *----------------------------------------------------*/
 		if ( EXAMPLE_TEST == 1 )
 		{
-			for( i = 0 ; i< NB_LED; i++)
+			do
 			{	
 				led_panel[i].r = 0;
 				led_panel[i].g = 0;
 				led_panel[i].b = 0;
-			}
-			if ( col == 7 )
+			} while (i++ != NB_LED);
+			if ( col == MAX_COL - 1 )
 				dec = 1;
 			if ( col == 0 )
 				dec = 0;
-			for( row = 0 ; row < 8; row++)
+			for( row = 0 ; row < MAX_ROW; row++)
 			{
-				led_panel[xy_to_idx(row, col)].r = 4;
-				led_panel[xy_to_idx(row, col)].g = 3;
-				led_panel[xy_to_idx(row, col)].b = 2;
-				led_panel[xy_to_idx(col, row)].r = 4;
-				led_panel[xy_to_idx(col, row)].g = 3;
-				led_panel[xy_to_idx(col, row)].b = 2;
+				led_panel[xy_to_idx(row, col)].r = 3;
+				led_panel[xy_to_idx(row, col)].g = 2;
+				led_panel[xy_to_idx(row, col)].b = 1;
+				led_panel[xy_to_idx(col, row)].r = 3;
+				led_panel[xy_to_idx(col, row)].g = 2;
+				led_panel[xy_to_idx(col, row)].b = 1;
 			}
 			if ( dec == 1 )
 				col--;
 			else
 				col++;
 
-			delay_ms(50);
+			delay_ms(10);
 			STM8WS2812_send_led_rgb_array(led_panel);
 	  }
 		
@@ -160,28 +163,28 @@ void main()
 		 *----------------------------------------------------*/
 		if ( EXAMPLE_TEST == 2 )
 		{
-			c = 10;
+			c = 3;
 			// Q 1/4 : Red
-			for( row = 0 ; row < 4; row++)
-				for( col = 0 ; col < 4; col++)
+			for( row = 0 ; row < MAX_ROW/2; row++)
+				for( col = 0 ; col < MAX_COL/2; col++)
 					led_panel[xy_to_idx(row, col)].r = c;
 			// Q 2/4 : Green
-			for( row = 4 ; row < 8; row++)
-				for( col = 0 ; col < 4; col++)
+			for( row = MAX_ROW/2 ; row < MAX_ROW; row++)
+				for( col = 0 ; col < MAX_COL/2; col++)
 					led_panel[xy_to_idx(row, col)].g = c;
 			// Q 3/4 : Blue
-			for( row = 0 ; row < 4; row++)
-				for( col = 4 ; col < 8; col++)
+			for( row = 0 ; row < MAX_ROW/2; row++)
+				for( col = MAX_COL/2 ; col < MAX_COL; col++)
 					led_panel[xy_to_idx(row, col)].b = c;
 			/// Q 4/4 : White
-			for( row = 4 ; row < 8; row++)
-				for( col = 4 ; col < 8; col++)
+			for( row = MAX_ROW/2 ; row < MAX_ROW; row++)
+				for( col = MAX_COL/2 ; col < MAX_COL; col++)
 				{
 					led_panel[xy_to_idx(row, col)].r = c;
 					led_panel[xy_to_idx(row, col)].g = c;
 					led_panel[xy_to_idx(row, col)].b = c;
 				}
-				delay_ms(100);
+				delay_ms(4);
 				STM8WS2812_send_led_rgb_array(led_panel);
 		}
 		
@@ -191,8 +194,9 @@ void main()
 		 *----------------------------------------------------*/
 		if ( EXAMPLE_TEST == 3 )
 		{
-			c =1;
-			for( i = 0 ; i < NB_LED; i++)
+			c = 1;
+			i = 0;
+			do
 			{
 				switch (dec)
 				{
@@ -222,12 +226,35 @@ void main()
 						led_panel[i].b = c;
 					break;
 				}
-			}
+			} while (i++ != NB_LED);
 			delay_ms(500);
 			STM8WS2812_send_led_rgb_array(led_panel);
 			dec++;
 			if ( dec > 4 )
 				dec = 0;
+		}
+
+		/*----------------------------------------------------
+		 * Running dot
+		 *----------------------------------------------------*/
+		if ( EXAMPLE_TEST == 4 )
+		{
+			i = 0;
+			do
+			{
+				led_panel[i].r = 0;
+				led_panel[i].g = 0;
+				led_panel[i].b = 0;
+			} while (i++ != NB_LED);
+			led_panel[j].r   = 1;
+			led_panel[j].g   = 4;
+			led_panel[j++].b = 5;
+			
+			
+			delay_ms(50);
+			STM8WS2812_send_led_rgb_array(led_panel);
+			if ( j >= NB_LED )
+				j = 0;
 		}
 
 	}

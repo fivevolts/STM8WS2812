@@ -20,9 +20,11 @@
 
 
 // Decoding stream for SPI equivalent to WS2812's 1 and 0
-#define WS_1   ((uint8_t)0b01111100)
-#define WS_0   ((uint8_t)0b01110000)
-#define NB_LED ((uint8_t)64)
+#define WS_1   ((uint8_t)0b00111110)
+#define WS_0   ((uint8_t)0b00111000)
+#define MAX_COL ((uint8_t)16)
+#define MAX_ROW ((uint8_t)16)
+#define NB_LED ((uint8_t)(MAX_COL*MAX_ROW-1))
 
 
 // Decoding stream for SPI equivalent to WS2812's 1 and 0

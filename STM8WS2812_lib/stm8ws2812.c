@@ -77,10 +77,10 @@ void STM8WS2812_send_led_single(RGB_typedef rgb_led )
 void STM8WS2812_send_led_rgb_array(RGB_typedef *led_panel)
 {
 	uint8_t i = 0;
-	for( i=0; i<=NB_LED; i++)
+	do
 	{
 		STM8WS2812_send_led_single(led_panel[i]);
-	}
+	} while (i++ != NB_LED);
 	delay_10us(10); /* RET code */
 
 }
@@ -94,14 +94,25 @@ void STM8WS2812_switchoff_all(void )
 {
 	uint8_t i = 0;
 	uint8_t j = 0;
-	for( i=0; i< NB_LED; i++)
+	/* for( i=0; i <= NB_LED; i++)
 	{
-		for( j=0; j<24; j++)
+		for( j=0; j < 24; j++)
 		{
 			SPI->DR = WS_0;
 			while ((SPI->SR & (uint8_t)SPI_FLAG_TXE) == (uint8_t)RESET );
 		}
-	}
+	} */
+
+	do
+	{
+		for( j=0; j < 24; j++)
+		{
+			SPI->DR = WS_0;
+			while ((SPI->SR & (uint8_t)SPI_FLAG_TXE) == (uint8_t)RESET );
+		}
+	} while (i++ != NB_LED);
+
+
 	delay_10us(10); /* RET code */
 
 }
