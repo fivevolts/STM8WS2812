@@ -94,14 +94,6 @@ void STM8WS2812_switchoff_all(void )
 {
 	uint8_t i = 0;
 	uint8_t j = 0;
-	/* for( i=0; i <= NB_LED; i++)
-	{
-		for( j=0; j < 24; j++)
-		{
-			SPI->DR = WS_0;
-			while ((SPI->SR & (uint8_t)SPI_FLAG_TXE) == (uint8_t)RESET );
-		}
-	} */
 
 	do
 	{

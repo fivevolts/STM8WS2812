@@ -20,7 +20,7 @@
  *  3 : r/g/b/w blink cycle
  *  4 : running dot
  */
-#define EXAMPLE_TEST ((uint8_t)1)
+#define EXAMPLE_TEST ((uint8_t)2)
 
 /*
  * Peripheral initialisation functions
@@ -153,7 +153,7 @@ void main()
 			else
 				col++;
 
-			delay_ms(10);
+			delay_ms(50);
 			STM8WS2812_send_led_rgb_array(led_panel);
 	  }
 		
