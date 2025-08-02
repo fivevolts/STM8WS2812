@@ -19,8 +19,17 @@
  *  2 : 4 quadrants RGB+white
  *  3 : r/g/b/w blink cycle
  *  4 : running dot
+ *  5 : Random comet
  */
-#define EXAMPLE_TEST ((uint8_t)2)
+// #define EXAMPLE_TEST ((uint8_t)5)
+
+// #define __EXAMPLE_1
+// #define __EXAMPLE_2
+// #define __EXAMPLE_3
+//#define __EXAMPLE_4
+#define __EXAMPLE_5
+
+
 
 /*
  * Peripheral initialisation functions
@@ -97,7 +106,7 @@ void main()
 	 * Create the RGB array for NB_LED LEDs
 	 * Initialise the array
 	 *-------------------------------------------------*/
-	RGB_typedef *led_panel = malloc(NB_LED * sizeof(RGB_typedef));
+	RGB_typedef *led_panel = malloc((NB_LED+1) * sizeof(RGB_typedef));
 
 	i = 0;
 	do
@@ -127,8 +136,7 @@ void main()
 		/*----------------------------------------------------
 		 * X/Y line scan
 		 *----------------------------------------------------*/
-		if ( EXAMPLE_TEST == 1 )
-		{
+#ifdef __EXAMPLE_1
 			do
 			{	
 				led_panel[i].r = 0;
@@ -155,14 +163,13 @@ void main()
 
 			delay_ms(50);
 			STM8WS2812_send_led_rgb_array(led_panel);
-	  }
+#endif
 		
 
 		/*----------------------------------------------------
 		 * RGBW quadrant
 		 *----------------------------------------------------*/
-		if ( EXAMPLE_TEST == 2 )
-		{
+#ifdef __EXAMPLE_2
 			c = 3;
 			// Q 1/4 : Red
 			for( row = 0 ; row < MAX_ROW/2; row++)
@@ -186,14 +193,13 @@ void main()
 				}
 				delay_ms(4);
 				STM8WS2812_send_led_rgb_array(led_panel);
-		}
+#endif
 		
 		
 		/*----------------------------------------------------
 		 * r/g/b/w blink cycle
 		 *----------------------------------------------------*/
-		if ( EXAMPLE_TEST == 3 )
-		{
+#ifdef __EXAMPLE_3
 			c = 1;
 			i = 0;
 			do
@@ -232,13 +238,12 @@ void main()
 			dec++;
 			if ( dec > 4 )
 				dec = 0;
-		}
+#endif
 
 		/*----------------------------------------------------
 		 * Running dot
 		 *----------------------------------------------------*/
-		if ( EXAMPLE_TEST == 4 )
-		{
+#ifdef __EXAMPLE_4
 			i = 0;
 			do
 			{
@@ -255,7 +260,32 @@ void main()
 			STM8WS2812_send_led_rgb_array(led_panel);
 			if ( j >= NB_LED )
 				j = 0;
-		}
+#endif
+
+		/*----------------------------------------------------
+		 * Random comet
+		 *----------------------------------------------------*/
+#ifdef __EXAMPLE_5
+			i = 0;
+			do
+			{
+				led_panel[i].r = 0;
+				led_panel[i].g = 0;
+				led_panel[i].b = 0;
+			} while (i++ != NB_LED);
+			
+			j =  (uint8_t)rand()%256;
+			led_panel[j].r   = 7;
+			// led_panel[j].r   = (uint8_t)(rand() % 2 + 1);
+			// led_panel[j].g   = (uint8_t)(rand() % 2 + 1);
+			// led_panel[j++].b = (uint8_t)(rand() % 2 + 1);
+			
+			
+			STM8WS2812_send_led_rgb_array(led_panel);
+			delay_ms(20);
+#endif
+
+
 
 	}
 }

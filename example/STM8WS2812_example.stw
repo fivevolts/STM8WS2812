@@ -6,7 +6,3 @@ Keyword=ST7Workspace-V0.7
 [Project0]
 Filename=stm8ws2812_example.stp
 Dependencies=
-[Options]
-ActiveProject=stm8ws2812_example
-ActiveConfig=Debug
-AddSortedElements=0
