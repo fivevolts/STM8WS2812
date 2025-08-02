@@ -24,10 +24,10 @@
 // #define EXAMPLE_TEST ((uint8_t)5)
 
 // #define __EXAMPLE_1
-// #define __EXAMPLE_2
+#define __EXAMPLE_2
 // #define __EXAMPLE_3
-//#define __EXAMPLE_4
-#define __EXAMPLE_5
+// #define __EXAMPLE_4
+// #define __EXAMPLE_5
 
 
 
@@ -81,7 +81,7 @@ void do_init_SPI(void )
 
 
 // Return array index from row and column
-uint8_t xy_to_idx( uint8_t row, uint8_t col)
+uint16_t xy_to_idx( uint16_t row, uint16_t col)
 {
     if (row % 2 == 0) {
         // Even rows: left to right
@@ -95,26 +95,26 @@ uint8_t xy_to_idx( uint8_t row, uint8_t col)
 
 void main()
 {
-	uint8_t i = 0;
-	uint8_t j = 0;
-	uint8_t dec = 0;
-	uint8_t row = 0;
-	uint8_t col = 0;
+	uint16_t i = 0;
+	uint16_t j = 0;
+	uint16_t row = 0;
+	uint16_t col = 0;
 	uint8_t c = 0;
+	uint8_t dec = 0;
 
 	/*-------------------------------------------------
 	 * Create the RGB array for NB_LED LEDs
 	 * Initialise the array
 	 *-------------------------------------------------*/
-	RGB_typedef *led_panel = malloc((NB_LED+1) * sizeof(RGB_typedef));
+	RGB_typedef *led_panel = malloc( NB_LED * sizeof(RGB_typedef));
 
 	i = 0;
-	do
+	for( i = 0; i < NB_LED ; i++)
 	{	
 		led_panel[i].r = 0;
 		led_panel[i].g = 0;
 		led_panel[i].b = 0;
-	} while (i++ != NB_LED);
+	}
 
 	/*-------------------------------------------------
 	 * Initialise peripheral
@@ -130,6 +130,11 @@ void main()
 	STM8WS2812_switchoff_all();
 
 
+	delay_ms(500);
+	delay_ms(500);
+	delay_ms(500);
+
+
 	while (1)
 	{
 
@@ -137,13 +142,13 @@ void main()
 		 * X/Y line scan
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_1
-			do
+			for( i = 0; i < NB_LED ; i++)
 			{	
 				led_panel[i].r = 0;
 				led_panel[i].g = 0;
 				led_panel[i].b = 0;
-			} while (i++ != NB_LED);
-			if ( col == MAX_COL - 1 )
+			}
+			if ( col == MAX_COL - 1)
 				dec = 1;
 			if ( col == 0 )
 				dec = 0;
@@ -161,7 +166,7 @@ void main()
 			else
 				col++;
 
-			delay_ms(50);
+			delay_ms(1);
 			STM8WS2812_send_led_rgb_array(led_panel);
 #endif
 		
@@ -170,7 +175,7 @@ void main()
 		 * RGBW quadrant
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_2
-			c = 3;
+			c = 1;
 			// Q 1/4 : Red
 			for( row = 0 ; row < MAX_ROW/2; row++)
 				for( col = 0 ; col < MAX_COL/2; col++)
@@ -191,8 +196,14 @@ void main()
 					led_panel[xy_to_idx(row, col)].g = c;
 					led_panel[xy_to_idx(row, col)].b = c;
 				}
-				delay_ms(4);
-				STM8WS2812_send_led_rgb_array(led_panel);
+
+			led_panel[5].r = 0;
+			led_panel[5].g = 0;
+			led_panel[5].b = 0;
+		
+
+			delay_ms(50);
+			STM8WS2812_send_led_rgb_array(led_panel);
 #endif
 		
 		
@@ -202,7 +213,7 @@ void main()
 #ifdef __EXAMPLE_3
 			c = 1;
 			i = 0;
-			do
+			for( i = 0; i < NB_LED ; i++)
 			{
 				switch (dec)
 				{
@@ -232,7 +243,7 @@ void main()
 						led_panel[i].b = c;
 					break;
 				}
-			} while (i++ != NB_LED);
+			}
 			delay_ms(500);
 			STM8WS2812_send_led_rgb_array(led_panel);
 			dec++;
@@ -245,12 +256,12 @@ void main()
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_4
 			i = 0;
-			do
+			for( i = 0; i < NB_LED ; i++)
 			{
 				led_panel[i].r = 0;
 				led_panel[i].g = 0;
 				led_panel[i].b = 0;
-			} while (i++ != NB_LED);
+			}
 			led_panel[j].r   = 1;
 			led_panel[j].g   = 4;
 			led_panel[j++].b = 5;
@@ -267,15 +278,15 @@ void main()
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_5
 			i = 0;
-			do
+			for( i = 0; i < NB_LED ; i++)
 			{
 				led_panel[i].r = 0;
 				led_panel[i].g = 0;
 				led_panel[i].b = 0;
-			} while (i++ != NB_LED);
+			}
 			
-			j =  (uint8_t)rand()%256;
-			led_panel[j].r   = 7;
+			// j = (uint16_t)(rand()%256);
+			led_panel[j++].r   = 7;
 			// led_panel[j].r   = (uint8_t)(rand() % 2 + 1);
 			// led_panel[j].g   = (uint8_t)(rand() % 2 + 1);
 			// led_panel[j++].b = (uint8_t)(rand() % 2 + 1);
@@ -283,6 +294,8 @@ void main()
 			
 			STM8WS2812_send_led_rgb_array(led_panel);
 			delay_ms(20);
+			if ( j >= NB_LED )
+				j = 0;
 #endif
 
 
