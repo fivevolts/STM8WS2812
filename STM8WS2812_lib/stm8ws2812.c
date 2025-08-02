@@ -127,7 +127,3 @@ void STM8WS2812_plain_color_fill(RGB_typedef rgb_led )
 	delay_10us(10); /* RET code 100 us */
 
 }
-
-
-
-

@@ -36,7 +36,6 @@
  */
 void do_init_CLK(void )
 {
-
   CLK_DeInit();
 
 	CLK_HSICmd(ENABLE); 
@@ -283,22 +282,19 @@ void main()
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_5
 			i = 0;
-			/* for( i = 0; i < NB_LED ; i++)
+			for( i = 0; i < NB_LED ; i++)
 			{
 				led_panel[i].r = 0;
 				led_panel[i].g = 0;
 				led_panel[i].b = 0;
-			} */
-			
-			j = (uint16_t)(rand()%NB_LED);
-			led_panel[j].r   = 3;
-			// led_panel[j].r   = (uint8_t)(rand() % 2 + 1);
-			// led_panel[j].g   = (uint8_t)(rand() % 2 + 1);
-			// led_panel[j++].b = (uint8_t)(rand() % 2 + 1);
+			}
+			led_panel[j].r   = 1;
+			led_panel[j].g   = 4;
+			led_panel[j++].b = 5;
 			
 			
+			delay_ms(50);
 			STM8WS2812_send_led_rgb_array(led_panel);
-			delay_ms(20);
 			if ( j >= NB_LED )
 				j = 0;
 #endif
