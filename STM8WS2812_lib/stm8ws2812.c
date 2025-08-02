@@ -37,12 +37,9 @@ void STM8WS2812_wait_spi_sr(void )
 void STM8WS2812_send_led_single(RGB_typedef rgb_led )
 {
 		// uint8_t value = 0;
-		uint8_t value_r = 0;
-		uint8_t value_g = 0;
-		uint8_t value_b = 0;
-		value_r = rgb_led.r;
-		value_g = rgb_led.g;
-		value_b = rgb_led.b;
+		uint8_t value_r = rgb_led.r;
+		uint8_t value_g = rgb_led.g;
+		uint8_t value_b = rgb_led.b;
 		//--
 		// value = rgb_led.g;
 		SPI->DR = ( value_g & ( 1 << 7 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
@@ -87,7 +84,7 @@ void STM8WS2812_send_led_rgb_array(RGB_typedef *led_panel)
 	{
 		STM8WS2812_send_led_single(led_panel[i]);
 	}
-	delay_10us(10); /* RET code */
+	delay_10us(10); /* RET code 100us */
 
 }
 
@@ -103,17 +100,34 @@ void STM8WS2812_switchoff_all(void )
 
 	for( i = 0; i < NB_LED ; i++)
 	{
-		for( j=0; j < 24; j++)
+		for( j = 0; j < 24; j++)
 		{
 			SPI->DR = WS_0;
 			while ((SPI->SR & (uint8_t)SPI_FLAG_TXE) == (uint8_t)RESET );
 		}
 	}
 
-
-	delay_10us(10); /* RET code */
+	delay_10us(10); /* RET code 100 us */
 
 }
+
+/* ------------------------------------------------
+ * Plain Color Fill
+ * ------------------------------------------------ */
+void STM8WS2812_plain_color_fill(RGB_typedef rgb_led )
+{
+	uint16_t i = 0;
+	uint8_t j = 0;
+
+	for( i = 0; i < NB_LED ; i++)
+	{
+		STM8WS2812_send_led_single( rgb_led );
+	}
+
+	delay_10us(10); /* RET code 100 us */
+
+}
+
 
 
 

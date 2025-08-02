@@ -24,10 +24,10 @@
 // #define EXAMPLE_TEST ((uint8_t)5)
 
 // #define __EXAMPLE_1
-#define __EXAMPLE_2
+// #define __EXAMPLE_2
 // #define __EXAMPLE_3
 // #define __EXAMPLE_4
-// #define __EXAMPLE_5
+#define __EXAMPLE_5
 
 
 
@@ -107,6 +107,7 @@ void main()
 	 * Initialise the array
 	 *-------------------------------------------------*/
 	RGB_typedef *led_panel = malloc( NB_LED * sizeof(RGB_typedef));
+	RGB_typedef single_dot = {5, 2, 3 };
 
 	i = 0;
 	for( i = 0; i < NB_LED ; i++)
@@ -133,6 +134,10 @@ void main()
 	delay_ms(500);
 	delay_ms(500);
 	delay_ms(500);
+
+
+	STM8WS2812_plain_color_fill(single_dot);
+	delay_ms(5000);
 
 
 	while (1)
@@ -278,15 +283,15 @@ void main()
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_5
 			i = 0;
-			for( i = 0; i < NB_LED ; i++)
+			/* for( i = 0; i < NB_LED ; i++)
 			{
 				led_panel[i].r = 0;
 				led_panel[i].g = 0;
 				led_panel[i].b = 0;
-			}
+			} */
 			
-			// j = (uint16_t)(rand()%256);
-			led_panel[j++].r   = 7;
+			j = (uint16_t)(rand()%NB_LED);
+			led_panel[j].r   = 3;
 			// led_panel[j].r   = (uint8_t)(rand() % 2 + 1);
 			// led_panel[j].g   = (uint8_t)(rand() % 2 + 1);
 			// led_panel[j++].b = (uint8_t)(rand() % 2 + 1);

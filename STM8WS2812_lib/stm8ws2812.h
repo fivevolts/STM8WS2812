@@ -20,18 +20,16 @@
 
 
 // Decoding stream for SPI equivalent to WS2812's 1 and 0
-#define WS_1   ((uint8_t)0b00111110)
-#define WS_0   ((uint8_t)0b00111000)
-#define MAX_COL ((uint8_t)16)
-#define MAX_ROW ((uint8_t)16)
+#define WS_1   ((uint8_t)0b01111100)
+#define WS_0   ((uint8_t)0b01110000)
+#define MAX_COL ((uint8_t)8)
+#define MAX_ROW ((uint8_t)8)
 #define NB_LED ((MAX_COL*MAX_ROW))
 
 
 // Decoding stream for SPI equivalent to WS2812's 1 and 0
-// const	uint8_t ws_1 = 0b01111100;
-// const	uint8_t ws_0 = 0b01110000;
-// RGB structuture 3 x 8 unsigned bits
 
+// RGB structuture 3 x 8 unsigned bits
 typedef struct RGB_typedef {
 	uint8_t r;
 	uint8_t g;
@@ -44,3 +42,4 @@ void STM8WS2812_send_led_single(RGB_typedef ) ;
 void STM8WS2812_send_led_rgb_array(RGB_typedef * ) ;
 void STM8WS2812_switchoff_all(void ) ;
 void STM8WS2812_wait_spi_sr(void );
+void STM8WS2812_plain_color_fill(RGB_typedef );
