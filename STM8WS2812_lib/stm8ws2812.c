@@ -41,7 +41,6 @@ void STM8WS2812_send_led_single(RGB_typedef rgb_led )
 		uint8_t value_g = rgb_led.g;
 		uint8_t value_b = rgb_led.b;
 		//--
-		// value = rgb_led.g;
 		SPI->DR = ( value_g & ( 1 << 7 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_g & ( 1 << 6 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_g & ( 1 << 5 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
@@ -50,7 +49,6 @@ void STM8WS2812_send_led_single(RGB_typedef rgb_led )
 		SPI->DR = ( value_g & ( 1 << 2 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_g & ( 1 << 1 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_g )              ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
-		// value = rgb_led.r;
 		SPI->DR = ( value_r & ( 1 << 7 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_r & ( 1 << 6 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_r & ( 1 << 5 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
@@ -59,7 +57,6 @@ void STM8WS2812_send_led_single(RGB_typedef rgb_led )
 		SPI->DR = ( value_r & ( 1 << 2 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_r & ( 1 << 1 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_r )              ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
-		// value = rgb_led.b;
 		SPI->DR = ( value_b & ( 1 << 7 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_b & ( 1 << 6 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
 		SPI->DR = ( value_b & ( 1 << 5 ) ) ? WS_1 : WS_0; STM8WS2812_wait_spi_sr();
@@ -74,12 +71,13 @@ void STM8WS2812_send_led_single(RGB_typedef rgb_led )
 }
 
 
+
 /* ------------------------------------------------
  * Send the full LED strip/panel value from RGB array
  * ------------------------------------------------ */
 void STM8WS2812_send_led_rgb_array(RGB_typedef *led_panel)
 {
-	uint16_t i = 0;
+	uint8_t i = 0;
 	for( i = 0; i < NB_LED ; i++)
 	{
 		STM8WS2812_send_led_single(led_panel[i]);
@@ -95,7 +93,7 @@ void STM8WS2812_send_led_rgb_array(RGB_typedef *led_panel)
  * ------------------------------------------------ */
 void STM8WS2812_switchoff_all(void )
 {
-	uint16_t i = 0;
+	uint8_t i = 0;
 	uint8_t j = 0;
 
 	for( i = 0; i < NB_LED ; i++)
@@ -108,15 +106,15 @@ void STM8WS2812_switchoff_all(void )
 	}
 
 	delay_10us(10); /* RET code 100 us */
-
 }
+
 
 /* ------------------------------------------------
  * Plain Color Fill
  * ------------------------------------------------ */
 void STM8WS2812_plain_color_fill(RGB_typedef rgb_led )
 {
-	uint16_t i = 0;
+	uint8_t i = 0;
 	uint8_t j = 0;
 
 	for( i = 0; i < NB_LED ; i++)
@@ -125,5 +123,4 @@ void STM8WS2812_plain_color_fill(RGB_typedef rgb_led )
 	}
 
 	delay_10us(10); /* RET code 100 us */
-
 }

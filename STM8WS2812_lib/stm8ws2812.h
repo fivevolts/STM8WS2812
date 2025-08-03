@@ -24,7 +24,8 @@
 #define WS_0   ((uint8_t)0b01110000)
 #define MAX_COL ((uint8_t)8)
 #define MAX_ROW ((uint8_t)8)
-#define NB_LED ((MAX_COL*MAX_ROW))
+// Limited to 255, limited by RAM anyway
+#define NB_LED ((uint8_t)(MAX_COL*MAX_ROW))
 
 
 // Decoding stream for SPI equivalent to WS2812's 1 and 0
