@@ -14,20 +14,23 @@
 
 
 /*
- * Example tests:
+ * Example tests (pick only one):
  *  1 : X/Y line scan on a 8x8 panel
  *  2 : 4 quadrants RGB+white
  *  3 : r/g/b/w blink cycle
  *  4 : running dot
  *  5 : Random comet
+ *  6 : Light on, fade out
+ *  7 : Random dimming
  */
-// #define EXAMPLE_TEST ((uint8_t)5)
 
 // #define __EXAMPLE_1
 // #define __EXAMPLE_2
 // #define __EXAMPLE_3
 // #define __EXAMPLE_4
-#define __EXAMPLE_5
+// #define __EXAMPLE_5
+// #define __EXAMPLE_6
+#define __EXAMPLE_7
 
 
 
@@ -130,13 +133,11 @@ void main()
 	STM8WS2812_switchoff_all();
 
 
-	delay_ms(500);
-	delay_ms(500);
-	delay_ms(500);
+	delay_ms(1000);
 
 
 	STM8WS2812_plain_color_fill(single_dot);
-	delay_ms(5000);
+	delay_ms(1000);
 
 
 	while (1)
@@ -281,22 +282,113 @@ void main()
 		 * Random comet
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_5
+			
+			// j = rand()%NB_LED;
+			// led_panel[j].r   = 20;
+			// led_panel[j].g   = 20;
+			// led_panel[j].b =   20;
+
+			// Row
+			// Col
+
+			do {
+				switch(rand()%5)
+				{
+						case 1 : 
+							if (row == MAX_ROW-1) row--;
+							else                  row++;
+						break;
+						case 2 : 
+							if (col == MAX_COL-1) col--;
+							else                  col++;
+						break;
+						case 3 :
+							if (row == 0) row++;
+							else          row--;
+						break;
+						case 4 : 
+							if (col == 0) col++;
+							else          col--;
+						break;
+				}
+			} while (led_panel[xy_to_idx(row, col)].r != 0);
+
 			i = 0;
 			for( i = 0; i < NB_LED ; i++)
 			{
-				led_panel[i].r = 0;
-				led_panel[i].g = 0;
-				led_panel[i].b = 0;
+				if ( led_panel[i].r != 0 ) led_panel[i].r -= 2;
+				if ( led_panel[i].g != 0 ) led_panel[i].g -= 2;
+				if ( led_panel[i].b != 0 ) led_panel[i].b -= 2;
+				
+				/*led_panel[i].r >>= 1;
+				led_panel[i].g >>= 1;
+				led_panel[i].b >>= 1;
+				*/
 			}
-			led_panel[j].r   = 1;
-			led_panel[j].g   = 4;
-			led_panel[j++].b = 5;
-			
-			
-			delay_ms(50);
+
+
+			led_panel[xy_to_idx(row, col)].r   = 6;
+			led_panel[xy_to_idx(row, col)].g   = 6;
+			led_panel[xy_to_idx(row, col)].b   = 6;
+		
 			STM8WS2812_send_led_rgb_array(led_panel);
-			if ( j >= NB_LED )
-				j = 0;
+			delay_ms(1);
+#endif
+
+		/*----------------------------------------------------
+		 *  Light on, fade out
+		 *----------------------------------------------------*/
+#ifdef __EXAMPLE_6
+			
+			dec = 20;
+			if ( rand()%20 == 1 )
+			{
+				for( i = 0; i < NB_LED ; i++)
+				{
+					if ( led_panel[i].r != 0 ) led_panel[i].r -= 1;
+					if ( led_panel[i].g != 0 ) led_panel[i].g -= 1;
+					if ( led_panel[i].b != 0 ) led_panel[i].b -= 1;
+				}
+			}
+		
+			if ( rand()%50 == 1 )
+			{
+				do
+				{
+					j = rand()%NB_LED;
+				} while ( led_panel[j].r != 0 && led_panel[j].g != 0 && led_panel[j].b != 0 );
+				led_panel[j].r   = dec;
+				led_panel[j].g   = dec;
+				led_panel[j].b =   dec;
+			}
+		
+			//delay_ms(1);
+			STM8WS2812_send_led_rgb_array(led_panel);
+#endif
+		/*----------------------------------------------------
+		 *  Random dimming
+		 *----------------------------------------------------*/
+#ifdef __EXAMPLE_7
+			dec = 20;
+			if ( rand()%4 == 1 )
+			{
+				j = rand()%NB_LED;
+				if ( led_panel[j].r < dec ) led_panel[j].r++;
+				j = rand()%NB_LED;
+				if ( led_panel[j].g < dec ) led_panel[j].g++;
+				j = rand()%NB_LED;
+				if ( led_panel[j].b < dec ) led_panel[j].b++;
+		} else {
+				j = rand()%NB_LED;
+				if ( led_panel[j].r != 0 ) led_panel[j].r--;
+				j = rand()%NB_LED;
+				if ( led_panel[j].g != 0 ) led_panel[j].g--;
+				j = rand()%NB_LED;
+				if ( led_panel[j].b != 0 ) led_panel[j].b--;
+		}
+		
+		delay_ms(50);
+		STM8WS2812_send_led_rgb_array(led_panel);
 #endif
 
 
