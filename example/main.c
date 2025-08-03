@@ -21,8 +21,8 @@
  *  4 : running dot
  *  5 : Random comet
  *  6 : Light on, fade out
- *  7 : Random dimming
- *  8 : Nian cat
+ *  7 : Random blue dimming
+ *  8 : gif picture sample
  */
 
 // #define __EXAMPLE_1
@@ -31,8 +31,8 @@
 // #define __EXAMPLE_4
 // #define __EXAMPLE_5
 // #define __EXAMPLE_6
-// #define __EXAMPLE_7
-#define __EXAMPLE_8
+#define __EXAMPLE_7
+// #define __EXAMPLE_8
 
 
 
@@ -155,14 +155,7 @@ void main()
 	STM8WS2812_switchoff_all();
 
 
-	delay_ms(1000);
-
-
-	STM8WS2812_plain_color_fill(single_dot);
-	delay_ms(1000);
-
-
-	while (1)
+  while (1)
 	{
 
 		/*----------------------------------------------------
@@ -193,7 +186,7 @@ void main()
 			else
 				col++;
 
-			delay_ms(1);
+			delay_ms(100);
 			STM8WS2812_send_led_rgb_array(led_panel);
 #endif
 		
@@ -223,11 +216,6 @@ void main()
 					led_panel[xy_to_idx_zz(row, col)].g = c;
 					led_panel[xy_to_idx_zz(row, col)].b = c;
 				}
-
-			led_panel[5].r = 0;
-			led_panel[5].g = 0;
-			led_panel[5].b = 0;
-		
 
 			delay_ms(50);
 			STM8WS2812_send_led_rgb_array(led_panel);
@@ -305,56 +293,29 @@ void main()
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_5
 			
-			// j = rand()%NB_LED;
-			// led_panel[j].r   = 20;
-			// led_panel[j].g   = 20;
-			// led_panel[j].b =   20;
-
-			// Row
-			// Col
-
 			do {
 				switch(rand()%5)
 				{
-						case 1 : 
-							if (row == MAX_ROW-1) row--;
-							else                  row++;
-						break;
-						case 2 : 
-							if (col == MAX_COL-1) col--;
-							else                  col++;
-						break;
-						case 3 :
-							if (row == 0) row++;
-							else          row--;
-						break;
-						case 4 : 
-							if (col == 0) col++;
-							else          col--;
-						break;
+					case 1 : if (row == MAX_ROW-1) row--; else row++; break;
+					case 2 : if (col == MAX_COL-1) col--; else col++; break;
+					case 3 : if (row == 0) 			   row++; else row--; break;
+					case 4 : if (col == 0)         col++; else col--; break;
 				}
 			} while (led_panel[xy_to_idx_zz(row, col)].r != 0);
 
 			i = 0;
 			for( i = 0; i < NB_LED ; i++)
 			{
-				if ( led_panel[i].r != 0 ) led_panel[i].r -= 2;
-				if ( led_panel[i].g != 0 ) led_panel[i].g -= 2;
-				if ( led_panel[i].b != 0 ) led_panel[i].b -= 2;
-				
-				/*led_panel[i].r >>= 1;
-				led_panel[i].g >>= 1;
-				led_panel[i].b >>= 1;
-				*/
+				if ( led_panel[i].r != 0 ) led_panel[i].r -= 1;
+				if ( led_panel[i].g != 0 ) led_panel[i].g -= 1;
+				if ( led_panel[i].b != 0 ) led_panel[i].b -= 1;
 			}
-
-
 			led_panel[xy_to_idx_zz(row, col)].r   = 6;
 			led_panel[xy_to_idx_zz(row, col)].g   = 6;
 			led_panel[xy_to_idx_zz(row, col)].b   = 6;
-		
+	
 			STM8WS2812_send_led_rgb_array(led_panel);
-			delay_ms(1);
+			delay_ms(100);
 #endif
 
 		/*----------------------------------------------------
@@ -393,16 +354,18 @@ void main()
 		 *  Random blue dimming
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_7
-			dec = 20;
-			if ( rand()%4 == 1 )
-			{
-				j = rand()%NB_LED;
-				if ( led_panel[j].b < dec ) led_panel[j].b++;
-			} else {
-				j = rand()%NB_LED;
-				if ( led_panel[j].b != 0 ) led_panel[j].b--;
-			}
-		
+		dec = 20;
+		if ( rand()%4 == 1 )
+		{
+			j = rand()%NB_LED;
+			if ( led_panel[j].b < dec ) led_panel[j].b++;
+		}
+		else
+		{
+			j = rand()%NB_LED;
+			if ( led_panel[j].b != 0 ) led_panel[j].b--;
+		}
+	
 		delay_ms(50);
 		STM8WS2812_send_led_rgb_array(led_panel);
 #endif
@@ -412,7 +375,6 @@ void main()
 		 *  nian cat picture
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_8
-
 		for( col = 0 ; col < MAX_COL; col++)
 		{
 			for( row = 0 ; row < MAX_ROW; row++)
@@ -428,10 +390,7 @@ void main()
 
 		delay_ms(1000);
 		STM8WS2812_send_led_rgb_array(led_panel);
-
 #endif
-
-
 
 	}
 }
