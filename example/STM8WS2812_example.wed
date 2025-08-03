@@ -1988,18 +1988,6 @@ ptn_Child2=ChildFrames
 
 [WorkState_v1_2.Frames.MainFrame]
 WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPGDBAAAAANBAAAAAAIMGAAAAAGPDAAAAA
-Title=ST Visual Develop - STM8WS2812_example.stw - [main.c]
+Title=ST Visual Develop - STM8WS2812_example.stw
 
 [WorkState_v1_2.Frames.ChildFrames]
-ptn_Child1=Document-0
-
-[WorkState_v1_2.Frames.ChildFrames.Document-0]
-ptn_Child1=ViewFrame-0
-
-[WorkState_v1_2.Frames.ChildFrames.Document-0.ViewFrame-0]
-DocPathName=main.c
-DocumentString=
-DocTemplateIndex=0
-WindowPlacement=MCAAAAAACAAAAAAADAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPMJAAAAAAMJAAAAAAJNCAAAAACHCAAAAA
-IsActiveChildFrame=True
-IsFrameVisible=True
