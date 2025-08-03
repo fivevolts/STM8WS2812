@@ -22,6 +22,7 @@
  *  5 : Random comet
  *  6 : Light on, fade out
  *  7 : Random dimming
+ *  8 : Nian cat
  */
 
 // #define __EXAMPLE_1
@@ -30,7 +31,8 @@
 // #define __EXAMPLE_4
 // #define __EXAMPLE_5
 // #define __EXAMPLE_6
-#define __EXAMPLE_7
+// #define __EXAMPLE_7
+#define __EXAMPLE_8
 
 
 
@@ -82,8 +84,8 @@ void do_init_SPI(void )
 }
 
 
-// Return array index from row and column
-uint16_t xy_to_idx( uint16_t row, uint16_t col)
+// Return array index from row and column Zig-zg pattern
+uint16_t xy_to_idx_zz( uint16_t row, uint16_t col)
 {
     if (row % 2 == 0) {
         // Even rows: left to right
@@ -93,6 +95,24 @@ uint16_t xy_to_idx( uint16_t row, uint16_t col)
         return row * MAX_ROW + (MAX_COL - 1 - col);
     }
 }
+
+// Return array index from row and column (regular)
+uint16_t xy_to_idx( uint16_t row, uint16_t col)
+{
+	return col * MAX_COL + row;
+}
+
+// 256 color encoding RRRGGBB
+static const uint8_t test_pict [ ] = {
+0xff,0xdb,0xdb,0xdb,0xdb,0xdb,0xff,0xff
+,0xda,0xf6,0xf7,0xf3,0xf3,0xf6,0xda,0xff
+,0xd6,0xf3,0xf3,0xcf,0xcf,0xf3,0xb1,0xdb
+,0x8d,0xf3,0xf3,0xae,0x92,0xae,0x92,0x96
+,0x6d,0xf3,0xf3,0x8e,0x92,0x92,0x92,0x92
+,0xb5,0xf7,0xf3,0xb2,0x8d,0x49,0x8d,0xb2
+,0x24,0x8d,0x8d,0x92,0x24,0x49,0x6d,0xff
+,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff
+ };
 
 
 void main()
@@ -159,12 +179,12 @@ void main()
 				dec = 0;
 			for( row = 0 ; row < MAX_ROW; row++)
 			{
-				led_panel[xy_to_idx(row, col)].r = 3;
-				led_panel[xy_to_idx(row, col)].g = 2;
-				led_panel[xy_to_idx(row, col)].b = 1;
-				led_panel[xy_to_idx(col, row)].r = 3;
-				led_panel[xy_to_idx(col, row)].g = 2;
-				led_panel[xy_to_idx(col, row)].b = 1;
+				led_panel[xy_to_idx_zz(row, col)].r = 3;
+				led_panel[xy_to_idx_zz(row, col)].g = 2;
+				led_panel[xy_to_idx_zz(row, col)].b = 1;
+				led_panel[xy_to_idx_zz(col, row)].r = 3;
+				led_panel[xy_to_idx_zz(col, row)].g = 2;
+				led_panel[xy_to_idx_zz(col, row)].b = 1;
 			}
 			if ( dec == 1 )
 				col--;
@@ -184,22 +204,22 @@ void main()
 			// Q 1/4 : Red
 			for( row = 0 ; row < MAX_ROW/2; row++)
 				for( col = 0 ; col < MAX_COL/2; col++)
-					led_panel[xy_to_idx(row, col)].r = c;
+					led_panel[xy_to_idx_zz(row, col)].r = c;
 			// Q 2/4 : Green
 			for( row = MAX_ROW/2 ; row < MAX_ROW; row++)
 				for( col = 0 ; col < MAX_COL/2; col++)
-					led_panel[xy_to_idx(row, col)].g = c;
+					led_panel[xy_to_idx_zz(row, col)].g = c;
 			// Q 3/4 : Blue
 			for( row = 0 ; row < MAX_ROW/2; row++)
 				for( col = MAX_COL/2 ; col < MAX_COL; col++)
-					led_panel[xy_to_idx(row, col)].b = c;
+					led_panel[xy_to_idx_zz(row, col)].b = c;
 			/// Q 4/4 : White
 			for( row = MAX_ROW/2 ; row < MAX_ROW; row++)
 				for( col = MAX_COL/2 ; col < MAX_COL; col++)
 				{
-					led_panel[xy_to_idx(row, col)].r = c;
-					led_panel[xy_to_idx(row, col)].g = c;
-					led_panel[xy_to_idx(row, col)].b = c;
+					led_panel[xy_to_idx_zz(row, col)].r = c;
+					led_panel[xy_to_idx_zz(row, col)].g = c;
+					led_panel[xy_to_idx_zz(row, col)].b = c;
 				}
 
 			led_panel[5].r = 0;
@@ -311,7 +331,7 @@ void main()
 							else          col--;
 						break;
 				}
-			} while (led_panel[xy_to_idx(row, col)].r != 0);
+			} while (led_panel[xy_to_idx_zz(row, col)].r != 0);
 
 			i = 0;
 			for( i = 0; i < NB_LED ; i++)
@@ -327,9 +347,9 @@ void main()
 			}
 
 
-			led_panel[xy_to_idx(row, col)].r   = 6;
-			led_panel[xy_to_idx(row, col)].g   = 6;
-			led_panel[xy_to_idx(row, col)].b   = 6;
+			led_panel[xy_to_idx_zz(row, col)].r   = 6;
+			led_panel[xy_to_idx_zz(row, col)].g   = 6;
+			led_panel[xy_to_idx_zz(row, col)].b   = 6;
 		
 			STM8WS2812_send_led_rgb_array(led_panel);
 			delay_ms(1);
@@ -365,30 +385,48 @@ void main()
 			//delay_ms(1);
 			STM8WS2812_send_led_rgb_array(led_panel);
 #endif
-		/*----------------------------------------------------
-		 *  Random dimming
+
+
+    /*----------------------------------------------------
+		 *  Random blue dimming
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_7
 			dec = 20;
 			if ( rand()%4 == 1 )
 			{
 				j = rand()%NB_LED;
-				if ( led_panel[j].r < dec ) led_panel[j].r++;
-				j = rand()%NB_LED;
-				if ( led_panel[j].g < dec ) led_panel[j].g++;
-				j = rand()%NB_LED;
 				if ( led_panel[j].b < dec ) led_panel[j].b++;
-		} else {
-				j = rand()%NB_LED;
-				if ( led_panel[j].r != 0 ) led_panel[j].r--;
-				j = rand()%NB_LED;
-				if ( led_panel[j].g != 0 ) led_panel[j].g--;
+			} else {
 				j = rand()%NB_LED;
 				if ( led_panel[j].b != 0 ) led_panel[j].b--;
-		}
+			}
 		
 		delay_ms(50);
 		STM8WS2812_send_led_rgb_array(led_panel);
+#endif
+
+
+    /*----------------------------------------------------
+		 *  nian cat picture
+		 *----------------------------------------------------*/
+#ifdef __EXAMPLE_8
+
+		for( col = 0 ; col < MAX_COL; col++)
+		{
+			for( row = 0 ; row < MAX_ROW; row++)
+			{
+				j = xy_to_idx_zz(row, col);
+				dec = test_pict[xy_to_idx(row, col)];
+				// RRRGGGBB
+				led_panel[j].r = (  (dec >> 5) & 0x07 )  ;
+				led_panel[j].g = (  (dec >> 2) & 0x07 )  ;
+				led_panel[j].b = (   dec & 0x03 )  ;
+			}
+		}
+
+		delay_ms(1000);
+		STM8WS2812_send_led_rgb_array(led_panel);
+
 #endif
 
 
