@@ -20,4 +20,9 @@ are provided for the STM8S003 by setting EXAMPLE_TEST (main.c) to:
  - 1 : X/Y line scan on a 8x8 panel
  - 2 : 4 quadrants RGB+white
  - 3 : r/g/b/w blink cycle
+ - 4 : running dot
+ - 5 : Random comet
+ - 6 : Light on, fade out
+ - 7 : Random blue dimming
+ - 8 : gif picture sample
 
