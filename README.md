@@ -25,4 +25,4 @@ are provided for the STM8S003 by setting EXAMPLE_TEST (main.c) to:
  - 6 : Light on, fade out
  - 7 : Random blue dimming
  - 8 : gif picture sample
-
+ - 9 : chessboard
