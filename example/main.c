@@ -23,6 +23,7 @@
  *  6 : Light on, fade out
  *  7 : Random blue dimming
  *  8 : gif picture sample
+ *  9 : chessboard
  */
 
 // #define __EXAMPLE_1
@@ -31,8 +32,9 @@
 // #define __EXAMPLE_4
 // #define __EXAMPLE_5
 // #define __EXAMPLE_6
-#define __EXAMPLE_7
+// #define __EXAMPLE_7
 // #define __EXAMPLE_8
+#define __EXAMPLE_9
 
 
 
@@ -195,7 +197,7 @@ void main()
 		 * RGBW quadrant
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_2
-			c = 1;
+			c = 10;
 			// Q 1/4 : Red
 			for( row = 0 ; row < MAX_ROW/2; row++)
 				for( col = 0 ; col < MAX_COL/2; col++)
@@ -372,7 +374,7 @@ void main()
 
 
     /*----------------------------------------------------
-		 *  nian cat picture
+		 *  gif picture
 		 *----------------------------------------------------*/
 #ifdef __EXAMPLE_8
 		for( col = 0 ; col < MAX_COL; col++)
@@ -382,15 +384,40 @@ void main()
 				j = xy_to_idx_zz(row, col);
 				// RRRGGGBB
 				dec = test_pict[xy_to_idx(row, col)];
-				led_panel[j].r = (  (dec >> 5) & 0x07 )  ;
-				led_panel[j].g = (  (dec >> 2) & 0x07 )  ;
-				led_panel[j].b = (   dec & 0x03 ) ;
+				led_panel[j].r = (  (dec >> 5) & 0x07 ) << 2 ;
+				led_panel[j].g = (  (dec >> 2) & 0x07 ) << 2 ;
+				led_panel[j].b = (   dec & 0x03 ) << 2;
 			}
 		}
 
 		delay_ms(1000);
 		STM8WS2812_send_led_rgb_array(led_panel);
 #endif
+
+
+    /*----------------------------------------------------
+		 *  chessboard
+		 *----------------------------------------------------*/
+#ifdef __EXAMPLE_9
+		c = 2;
+		for( j = 0 ; j < NB_LED ; j += 2)
+		{
+				led_panel[j].r = c;
+				led_panel[j].g = c;
+				led_panel[j].b = c;
+		}
+		for( j = 1 ; j < NB_LED ; j += 2)
+		{
+				led_panel[j].r = 0;
+				led_panel[j].g = 0;
+				led_panel[j].b = 0;
+		}
+
+		delay_ms(1000);
+		STM8WS2812_send_led_rgb_array(led_panel);
+#endif
+
+
 
 	}
 }
